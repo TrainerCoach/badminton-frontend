@@ -1,14 +1,20 @@
 
 "use client";
+
 import { useEffect, useState } from "react";
-import { getCategories, createExercise } from "@/lib/api";
+import { createExercise } from "@/lib/api";
 import { useRouter } from "next/navigation";
 export default function NewExercisePage(){
   const [cats,setCats]=useState([]);
   const [form,setForm]=useState({ title:"", category_id:"", goal:"", difficulty:"mittel", duration_min:10, players:"", equipment:"", steps:"", tips:"", video_url:"" });
   const [msg,setMsg]=useState("");
   const router=useRouter();
-  useEffect(()=>{ getCategories().then(setCats); },[]);
+  useEffect(() => {
+    fetch("https://derwebtrainer.eu.pythonanywhere.com/api/categories/")
+      .then((res) => res.json())
+      .then((data) => setCats(data))
+      .catch((err) => console.error("Fehler beim Laden der Kategorien:", err));
+  }, []);
   const onSubmit=async(e)=>{ e.preventDefault(); setMsg(""); const token=localStorage.getItem("jwt"); if(!token){ setMsg("Bitte zuerst einloggen."); return; }
     try{ const created=await createExercise(form, token); router.push(`/exercise/${created.id}`);}catch{ setMsg("Speichern fehlgeschlagen. Bitte Felder prüfen."); }};
   const set=(k)=>(e)=>setForm(f=>({...f,[k]: e.target.value}));
