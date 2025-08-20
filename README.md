@@ -10,3 +10,5 @@ NEXT_PUBLIC_API_BASE=https://derwebtrainer.eu.pythonanywhere.com/api
 npm i
 npm run dev
 ```
+# Badminton Frontend
+Teständerung – mein erster Commit aus VS Code 🎉
